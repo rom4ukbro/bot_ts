@@ -1,2 +1,2 @@
 worker: npm start
-web: 0
+web: npm start:prod
