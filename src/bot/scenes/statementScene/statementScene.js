@@ -47,57 +47,57 @@ statementScene.enter((ctx) => {
 });
 
 statementScene.action(absenceLess, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement1Scene');
 });
 
 statementScene.action(explanatoryNote, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement2Scene');
 });
 
 statementScene.action(individualTraining, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement3Scene');
 });
 
 statementScene.action(distanceLearning, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement4Scene');
 });
 
 statementScene.action(chooseSpecialty, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement5Scene');
 });
 
 statementScene.action(deductionsStudent, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement6Scene');
 });
 
 statementScene.action(renewalStudent, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement7Scene');
 });
 
 statementScene.action(rearrangementTest, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement8Scene');
 });
 
 statementScene.action(academicLeave, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement9Scene');
 });
 
 statementScene.action(transferSession, (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('statement10Scene');
 });
 
 statementScene.action('back', (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {});
   return ctx.scene.enter('welcomeScene');
 });
 

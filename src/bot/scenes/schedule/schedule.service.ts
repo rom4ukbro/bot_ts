@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import moment from "moment";
 import emoji from "node-emoji";
 import { CustomContext } from "../../custom-context";
@@ -63,7 +65,7 @@ class ScheduleService {
             "",
             loadSchedule
           )
-          .catch((err) => {});
+          .catch(() => {});
 
         await redisWriteData(
           ctx.session.value + "_" + ctx.session.weekShift,
@@ -143,7 +145,7 @@ class ScheduleService {
       ctx.session.oneMessageId = Number(ctx.callbackQuery?.message?.message_id);
 
       ctx.scene.enter("statementScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
       console.log(e);
     }
@@ -157,9 +159,9 @@ class ScheduleService {
     try {
       ctx.session.weekShift -= 1;
       await ctx.scene.enter("scheduleScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -168,9 +170,9 @@ class ScheduleService {
     try {
       ctx.session.weekShift += 1;
       await ctx.scene.enter("scheduleScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -182,9 +184,9 @@ class ScheduleService {
         moment().format("dd").charAt(1);
       ctx.session.weekShift = 0;
       await ctx.scene.enter("scheduleScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -192,9 +194,9 @@ class ScheduleService {
   async mainMenu(ctx: CustomContext) {
     try {
       await ctx.scene.enter("welcomeScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -202,9 +204,9 @@ class ScheduleService {
   async changeQuery(ctx: CustomContext) {
     try {
       await ctx.editMessageText(changeQueryText, choiceKeyboard());
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -213,9 +215,9 @@ class ScheduleService {
     try {
       ctx.session.oneMessageId = Number(ctx.callbackQuery?.message?.message_id);
       await ctx.scene.enter("studentScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -224,9 +226,9 @@ class ScheduleService {
     try {
       ctx.session.oneMessageId = Number(ctx.callbackQuery?.message?.message_id);
       await ctx.scene.enter("teacherScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -234,9 +236,9 @@ class ScheduleService {
   async manualDate(ctx: CustomContext) {
     try {
       ctx.scene.enter("writeDateScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -247,9 +249,9 @@ class ScheduleService {
         aboutText,
         Markup.inlineKeyboard([[{ text: "Назад", callback_data: "back" }]])
       );
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -278,9 +280,9 @@ class ScheduleService {
         }
       );
 
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }
@@ -299,7 +301,9 @@ class ScheduleService {
         ctx.session.time = 0;
       }, 500);
       if (ctx.session.time !== 0)
-        return ctx.answerCbQuery(floodText, { show_alert: true });
+        return ctx
+          .answerCbQuery(floodText, { show_alert: true })
+          .catch(() => {});
       ctx.session.time = 1;
 
       ctx.session.scheduleKeyboard = JSON.parse(
@@ -340,9 +344,9 @@ class ScheduleService {
           reply_markup: { inline_keyboard: ctx.session.scheduleKeyboard },
         }
       );
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
-      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+      ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
       console.log(e);
     }
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Telegraf, Scenes, session } from "telegraf";
 import moment from "moment";
 import "moment-timezone";
@@ -65,7 +66,7 @@ bot.on("callback_query", (ctx) => {
     );
     ctx.scene.enter("welcomeScene");
   } catch (e) {
-    ctx.answerCbQuery("Ой, щось пішло не так");
+    ctx.answerCbQuery("Ой, щось пішло не так").catch(() => {});
   }
 });
 

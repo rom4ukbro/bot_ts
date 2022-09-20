@@ -41,7 +41,7 @@ class ChooseService {
   async back(ctx: CustomContext) {
     try {
       await ctx.scene.enter("welcomeScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {}
   }
 }

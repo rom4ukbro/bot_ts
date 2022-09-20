@@ -39,7 +39,7 @@ scheduleScene.enter(scheduleService.enter);
 
 scheduleScene.action("again", scheduleService.again);
 
-scheduleScene.action(checkBtn, (ctx) => ctx.answerCbQuery());
+scheduleScene.action(checkBtn, (ctx) => ctx.answerCbQuery().catch(() => {}));
 scheduleScene.action("Пн", scheduleService.day);
 scheduleScene.action("Вт", scheduleService.day);
 scheduleScene.action("Ср", scheduleService.day);
@@ -67,9 +67,9 @@ scheduleScene.action(allWeekBtnText, scheduleService.allWeek);
 scheduleScene.action("back", async (ctx) => {
   try {
     await ctx.scene.enter("scheduleScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
-    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
     console.log(e);
   }
 });
@@ -77,9 +77,9 @@ scheduleScene.action("back", async (ctx) => {
 scheduleScene.action(checkBtn, async (ctx) => {
   try {
     await ctx.scene.enter("scheduleScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
-    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
     console.log(e);
   }
 });
@@ -112,7 +112,7 @@ writeDateScene.command("start", async (ctx) => {
       ctx.deleteMessage(i).catch(() => {});
     }
   } catch (e) {
-    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
     console.log(e);
   }
 });
@@ -176,9 +176,9 @@ writeDateScene.on("text", (ctx) => {
 writeDateScene.action("back", (ctx) => {
   try {
     ctx.scene.enter("scheduleScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
-    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз");
+    ctx.answerCbQuery("Ой, сталася помилка. Спробуй ще раз").catch(() => {});
     console.log(e);
   }
 });

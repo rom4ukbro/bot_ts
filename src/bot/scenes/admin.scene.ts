@@ -50,7 +50,9 @@ logInAdminScene.enter((ctx) => {
         return ctx.scene.enter("adminPanelScene");
     }
     ctx.scene.enter("welcomeScene");
-    return ctx.answerCbQuery("Ти не маєш доступу!", { show_alert: true });
+    return ctx
+      .answerCbQuery("Ти не маєш доступу!", { show_alert: true })
+      .catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -83,7 +85,7 @@ adminPanelScene.enter(async (ctx) => {
 adminPanelScene.action("back", (ctx) => {
   try {
     ctx.scene.enter("adminPanelScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -92,7 +94,7 @@ adminPanelScene.action("back", (ctx) => {
 adminPanelScene.action("close", (ctx) => {
   try {
     ctx.scene.enter("welcomeScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -111,7 +113,7 @@ adminPanelScene.action("info", (ctx) => {
         `Користувачів за останні 7 днів: ${ctx.session.activeUsersCount}\n`,
       Markup.inlineKeyboard([[{ text: "Назад", callback_data: "back" }]])
     );
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -120,7 +122,7 @@ adminPanelScene.action("info", (ctx) => {
 adminPanelScene.action("mailing", (ctx) => {
   try {
     ctx.editMessageText(mailingText, mailingKeyboard);
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -129,7 +131,7 @@ adminPanelScene.action("mailing", (ctx) => {
 adminPanelScene.action("simple", (ctx) => {
   try {
     ctx.scene.enter("mailingSimpleScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -138,7 +140,7 @@ adminPanelScene.action("simple", (ctx) => {
 adminPanelScene.action("cb", (ctx) => {
   try {
     ctx.scene.enter("mailingCbScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -147,7 +149,7 @@ adminPanelScene.action("cb", (ctx) => {
 adminPanelScene.action("update", (ctx) => {
   try {
     ctx.scene.enter("mailingUpdateScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -204,8 +206,6 @@ mailingSimpleScene.action("send", async (ctx) => {
         inline_keyboard: [[{ text: "Прочитано", callback_data: "del" }]],
       },
     });
-
-    await ctx.scene.enter("adminPanelScene");
   } catch (e) {}
 });
 
@@ -242,7 +242,7 @@ mailingSimpleScene.on("text", async (ctx) => {
 mailingSimpleScene.action("back", (ctx) => {
   try {
     ctx.scene.enter("adminPanelScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -300,8 +300,6 @@ mailingCbScene.action("send", async (ctx) => {
         inline_keyboard: [[{ text: "Прочитано", callback_data: "del" }]],
       },
     });
-
-    await ctx.scene.enter("adminPanelScene");
   } catch (e) {
     console.log(e);
   }
@@ -336,9 +334,11 @@ mailingCbScene.on("text", (ctx) => {
 
 mailingCbScene.action("cb", (ctx) => {
   try {
-    ctx.answerCbQuery("Це приклад кнопки вона працюватиме після відправки", {
-      show_alert: true,
-    });
+    ctx
+      .answerCbQuery("Це приклад кнопки вона працюватиме після відправки", {
+        show_alert: true,
+      })
+      .catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -347,7 +347,7 @@ mailingCbScene.action("cb", (ctx) => {
 mailingCbScene.action("back", (ctx) => {
   try {
     ctx.scene.enter("adminPanelScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }
@@ -407,8 +407,6 @@ mailingUpdateScene.action("send", async (ctx) => {
     ctx.reply(`Повідомлення отримали ${sendMessages} користувачів`, {
       parse_mode: "Markdown",
     });
-
-    await ctx.scene.enter("adminPanelScene");
   } catch (e) {
     console.log(e);
   }
@@ -417,7 +415,7 @@ mailingUpdateScene.action("send", async (ctx) => {
 mailingUpdateScene.action("back", (ctx) => {
   try {
     ctx.scene.enter("adminPanelScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {
     console.log(e);
   }

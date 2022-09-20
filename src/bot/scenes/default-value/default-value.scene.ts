@@ -70,7 +70,7 @@ defaultValueScene.action(choiceTeacherText, async (ctx) => {
 defaultValueScene.action("back", async (ctx) => {
   try {
     await ctx.scene.enter("welcomeScene");
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
   } catch (e) {}
 });
 

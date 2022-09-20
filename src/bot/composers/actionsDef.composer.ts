@@ -6,7 +6,7 @@ const composer = new Composer<CustomContext>()
 
 composer.action('del', (ctx) => {
   try {
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
     ctx.deleteMessage();
   } catch (e) { }
 });
@@ -33,14 +33,14 @@ composer.action('reset_yes', async (ctx) => {
 
 composer.action('reset_no', (ctx) => {
   try {
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
     ctx.scene.enter('welcomeScene');
   } catch (error) { }
 });
 
 composer.action('cbScene', (ctx) => {
   try {
-    ctx.answerCbQuery();
+    ctx.answerCbQuery().catch(() => {});
     ctx.scene.enter('cbScene');
   } catch (error) { }
 });

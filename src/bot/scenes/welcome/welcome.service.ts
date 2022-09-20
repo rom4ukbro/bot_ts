@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { deleteMessage } from "../../helpers";
 import { welcomeText } from "../../text";
 import { Users } from "../../../db/user.schema";
@@ -8,7 +9,7 @@ class WelcomeService {
   async enter(ctx: CustomContext) {
     try {
       if (ctx?.callbackQuery?.message?.message_id) {
-        ctx.editMessageText(welcomeText, choiceKeyboard()).catch((err) => {
+        ctx.editMessageText(welcomeText, choiceKeyboard()).catch(() => {
           ctx.editMessageText(welcomeText + ":", choiceKeyboard());
         });
       } else {
@@ -27,7 +28,7 @@ class WelcomeService {
       ctx.session.oneMessageId = Number(ctx.callbackQuery?.message?.message_id);
 
       ctx.scene.enter("statementScene");
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
     } catch (e) {
       console.log(e);
     }
@@ -35,7 +36,7 @@ class WelcomeService {
 
   async schedule(ctx: CustomContext) {
     try {
-      ctx.answerCbQuery();
+      ctx.answerCbQuery().catch(() => {});
 
       ctx.session.oneMessageId = Number(ctx.callbackQuery?.message?.message_id);
 
@@ -52,7 +53,7 @@ class WelcomeService {
             ctx.session.default_role = user.default_role;
             ctx.session.weekShift = 0;
           })
-          .catch((err) => {});
+          .catch(() => {});
 
         if (ctx.session.default_value && ctx.session.default_role) {
           ctx.session.default_mode = true;
@@ -73,7 +74,9 @@ class WelcomeService {
 
   async progress(ctx: CustomContext) {
     try {
-      return ctx.answerCbQuery("Це поки що не доступно :< Я працюю над цим ");
+      return ctx
+        .answerCbQuery("Це поки що не доступно :< Я працюю над цим ")
+        .catch(() => {});
       ctx.session.oneMessageId = Number(ctx.callbackQuery?.message?.message_id);
       ctx.scene.enter("progressScene");
     } catch (e) {
