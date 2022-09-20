@@ -1,16 +1,17 @@
-import { Composer, Markup } from 'telegraf';
-import { Users } from '../../db/user.schema';
-import { resetDefaultValueText } from '../text';
-import { deleteMessage } from '../helpers';
-import { CustomContext } from '../custom-context';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { Composer, Markup } from "telegraf";
+import { Users } from "../../db/user.schema";
+import { resetDefaultValueText } from "../text";
+import { deleteMessage } from "../helpers";
+import { CustomContext } from "../custom-context";
 
-const composer = new Composer<CustomContext>()
+const composer = new Composer<CustomContext>();
 
-composer.command('start', async (ctx) => {
+composer.command("start", async (ctx) => {
   try {
     if (
-      ctx.message.chat?.type == 'supergroup' ||
-      ctx.message.chat?.type == 'group'
+      ctx.message.chat?.type == "supergroup" ||
+      ctx.message.chat?.type == "group"
     ) {
       return ctx.reply(`Я не працюю в ${ctx.message.chat?.type}`);
     }
@@ -27,7 +28,7 @@ composer.command('start', async (ctx) => {
         upsert: true,
         new: true,
         setDefaultsOnInsert: true,
-      },
+      }
     )
       .clone()
       .then(async (result) => {
@@ -35,14 +36,14 @@ composer.command('start', async (ctx) => {
         ctx.session.default_role = result?.default_role;
         ctx.session.weekShift = 0;
 
-        await ctx.scene.enter('welcomeScene');
+        await ctx.scene.enter("welcomeScene");
 
-        deleteMessage(ctx, ctx.message.message_id)
-        ctx.deleteMessage(ctx.session.oneMessageId).catch((err) => { });
+        deleteMessage(ctx, ctx.message.message_id);
+        ctx.deleteMessage(ctx.session.oneMessageId).catch(() => {});
       })
       .catch((err) => {
         ctx.reply(
-          'Щось пішло не так, спробуй ще раз(/start) або звернися по допомогу до творця бота',
+          "Щось пішло не так, спробуй ще раз(/start) або звернися по допомогу до творця бота"
         );
         console.log(err);
       });
@@ -51,65 +52,61 @@ composer.command('start', async (ctx) => {
   }
 });
 
-composer.command('admin', (ctx) => {
+composer.command("admin", (ctx) => {
   try {
     if (
-      ctx.message.chat?.type == 'supergroup' ||
-      ctx.message.chat?.type == 'group'
+      ctx.message.chat?.type == "supergroup" ||
+      ctx.message.chat?.type == "group"
     ) {
       return ctx.reply(`Я не працюю в ${ctx.message.chat?.type}`);
     }
 
-    ctx.scene.enter('logInAdminScene');
+    ctx.scene.enter("logInAdminScene");
 
     ctx.session.id = ctx.message.message_id;
     for (let i = ctx.session.id - 100; i <= ctx.session.id; i++) {
-      ctx.deleteMessage(i).catch((err) => { });
+      ctx.deleteMessage(i).catch(() => {});
     }
   } catch (e) {
     console.log(e);
   }
 });
 
-composer.command('reset', (ctx) => {
+composer.command("reset", (ctx) => {
   try {
     if (
-      ctx.message.chat?.type == 'supergroup' ||
-      ctx.message.chat?.type == 'group'
+      ctx.message.chat?.type == "supergroup" ||
+      ctx.message.chat?.type == "group"
     ) {
       return ctx.reply(`Я не працюю в ${ctx.message.chat?.type}`);
     }
 
-    ctx.deleteMessage(ctx.message.message_id).catch((e) => { });
+    ctx.deleteMessage(ctx.message.message_id).catch(() => {});
     if (!!ctx.session?.oneMessageId) {
-      ctx.telegram
-        .editMessageText(
-          ctx.from.id,
-          ctx.session.oneMessageId,
-          '',
-          resetDefaultValueText,
-          Markup.inlineKeyboard([
-            [{ text: 'Так', callback_data: 'reset_yes' }],
-            [{ text: 'Ні', callback_data: 'reset_no' }],
-          ]),
-        )
-    }
-    else {
+      ctx.telegram.editMessageText(
+        ctx.from.id,
+        ctx.session.oneMessageId,
+        "",
+        resetDefaultValueText,
+        Markup.inlineKeyboard([
+          [{ text: "Так", callback_data: "reset_yes" }],
+          [{ text: "Ні", callback_data: "reset_no" }],
+        ])
+      );
+    } else {
       ctx.reply(
         resetDefaultValueText,
         Markup.inlineKeyboard([
-          [{ text: 'Так', callback_data: 'reset_yes' }],
-          [{ text: 'Ні', callback_data: 'reset_no' }],
-        ]),
+          [{ text: "Так", callback_data: "reset_yes" }],
+          [{ text: "Ні", callback_data: "reset_no" }],
+        ])
       );
     }
 
-    deleteMessage(ctx,
-      ctx.message.message_id,
-      ctx.session.oneMessageId)
+    deleteMessage(ctx, ctx.message.message_id, ctx.session.oneMessageId);
   } catch (e) {
     console.log(e);
   }
 });
 
-export default composer
+export default composer;
