@@ -8,13 +8,15 @@ import { choiceKeyboard } from "./welcome.keyboard";
 class WelcomeService {
   async enter(ctx: CustomContext) {
     try {
-      if (ctx?.callbackQuery?.message?.message_id)
+      if (ctx?.callbackQuery?.message?.message_id) {
         ctx.editMessageText(welcomeText, choiceKeyboard()).catch((err) => {
           ctx.editMessageText(welcomeText + ':', choiceKeyboard());
         });
-      else ctx.reply(welcomeText, choiceKeyboard());
-
-      deleteMessage(ctx, Number(ctx?.callbackQuery?.message?.message_id || ctx.message?.message_id), ctx.session.oneMessageId)
+      }
+      else {
+        ctx.reply(welcomeText, choiceKeyboard());
+        deleteMessage(ctx, Number(ctx.message?.message_id), ctx.session.oneMessageId)
+      }
     } catch (e) { }
   }
 
