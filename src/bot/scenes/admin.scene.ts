@@ -209,28 +209,31 @@ mailingSimpleScene.action("send", async (ctx) => {
   } catch (e) {}
 });
 
-mailingSimpleScene.on("text", (ctx) => {
+mailingSimpleScene.on("text", async (ctx) => {
   try {
+    await ctx.deleteMessage(ctx.session.delMess).catch(() => {});
     ctx.session.text = ctx.message.text;
     ctx.session.delMess = ctx.message.message_id;
-    ctx.telegram.editMessageText(
-      ctx.chat.id,
-      ctx.session.adId,
-      "",
-      "Цей текст буде відправлено:\n\n" +
-        ctx.message.text +
-        "\n\nЩоб змінити просто напиши новий текст",
-      {
-        parse_mode: "Markdown",
-        disable_web_page_preview: true,
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: "Надіслати", callback_data: "send" }],
-            [{ text: "Назад", callback_data: "back" }],
-          ],
-        },
-      }
-    );
+    await ctx.telegram
+      .editMessageText(
+        ctx.chat.id,
+        ctx.session.adId,
+        "",
+        "Цей текст буде відправлено:\n\n" +
+          ctx.message.text +
+          "\n\nЩоб змінити просто напиши новий текст",
+        {
+          parse_mode: "Markdown",
+          disable_web_page_preview: true,
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: "Надіслати", callback_data: "send" }],
+              [{ text: "Назад", callback_data: "back" }],
+            ],
+          },
+        }
+      )
+      .catch((e) => console.log(e));
   } catch (e) {
     console.log(e);
   }
