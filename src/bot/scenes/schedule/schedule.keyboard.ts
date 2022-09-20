@@ -1,5 +1,13 @@
-import { Markup } from "telegraf";
-import { allWeekBtnText, changeQueryBtnText, mainMenu, manualDateBtnEntry, nextWeekText, previousWeekText, todayText, weekDaysBtn } from "../../text";
+import {
+  allWeekBtnText,
+  changeQueryBtnText,
+  mainMenu,
+  manualDateBtnEntry,
+  nextWeekText,
+  previousWeekText,
+  todayText,
+  weekDaysBtn,
+} from "../../text";
 
 export const scheduleKeyboard = [
   weekDaysBtn,

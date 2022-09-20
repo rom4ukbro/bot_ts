@@ -11,28 +11,33 @@ export interface SessionData extends SceneSession {
   // message id for update
   oneMessageId: number;
   // message ids for delete
-  id: number
+  id: number;
   messages?: number[];
 
-  value: string
-  mode: string
-  default_value?: string
-  default_role?: string
-  default_mode?: boolean
-  weekShift: number
-  searchArr: string[]
-  resultArr: string[]
-  space?: string
-  day: string
-  scheduleKeyboard: any
-  weekDaysBtn: any
-  fulDay: string
-  time: number
-  cbId: number
+  value: string;
+  mode: string;
+  default_value?: string;
+  default_role?: string;
+  default_mode?: boolean;
+  weekShift: number;
+  searchArr: string[];
+  resultArr: string[];
+  space?: string;
+  day: string;
+  scheduleKeyboard: any;
+  weekDaysBtn: any;
+  fulDay: string;
+  time: number;
+  cbId: number;
   // admin trash
-  adId: number
-  delMess: number
-  text: string
+  adId: number;
+  delMess: number;
+  text: string;
+
+  // admin
+  users: number[];
+  usersCount: number;
+  activeUsersCount: number;
 }
 
 export interface CustomContext extends BaseBotContext {

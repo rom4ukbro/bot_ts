@@ -9,7 +9,7 @@ const choiceKeyboard = () => {
             { text: text_1.choiceStudentText, callback_data: text_1.choiceStudentText },
             { text: text_1.choiceTeacherText, callback_data: text_1.choiceTeacherText },
         ],
-        [{ text: 'Назад', callback_data: 'back' }],
+        [{ text: "Назад", callback_data: "back" }],
     ]);
 };
 exports.choiceKeyboard = choiceKeyboard;

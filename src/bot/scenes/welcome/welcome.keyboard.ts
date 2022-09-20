@@ -1,5 +1,5 @@
 import { Markup } from "telegraf";
-import { choiceProgressText, choiceScheduleText, choiceStatementText } from "../../text";
+import { choiceScheduleText } from "../../text";
 
 export const choiceKeyboard = () => {
   return Markup.inlineKeyboard([

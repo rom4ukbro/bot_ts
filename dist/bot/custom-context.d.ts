@@ -23,6 +23,9 @@ export interface SessionData extends SceneSession {
     adId: number;
     delMess: number;
     text: string;
+    users: number[];
+    usersCount: number;
+    activeUsersCount: number;
 }
 export interface CustomContext extends BaseBotContext {
     session: SessionData;

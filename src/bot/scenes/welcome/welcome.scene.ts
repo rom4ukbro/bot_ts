@@ -1,11 +1,14 @@
-import { CustomContext } from '../../custom-context';
-import { Scenes } from 'telegraf';
+import { CustomContext } from "../../custom-context";
+import { Scenes } from "telegraf";
 
-import { choiceScheduleText, choiceProgressText, choiceStatementText } from '../../text';
-import welcomeService from './welcome.service';
+import {
+  choiceScheduleText,
+  choiceProgressText,
+  choiceStatementText,
+} from "../../text";
+import welcomeService from "./welcome.service";
 
-
-const welcomeScene = new Scenes.BaseScene<CustomContext>('welcomeScene');
+const welcomeScene = new Scenes.BaseScene<CustomContext>("welcomeScene");
 
 welcomeScene.enter(welcomeService.enter);
 
