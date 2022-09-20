@@ -13,7 +13,6 @@ import scenes from './scenes';
 import mongoose from 'mongoose';
 import { command, actionsDef, actionsAdd } from './composers';
 import { CustomContext } from './custom-context';
-import { http } from '../server';
 
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
@@ -25,9 +24,6 @@ const { BOT_DOMAIN, BOT_TOKEN: token } = process.env;
 if (token === undefined) {
   throw new Error('BOT_TOKEN must be provided!');
 }
-
-http
-
 
 const bot = new Telegraf<CustomContext>(token);
 
