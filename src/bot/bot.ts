@@ -20,7 +20,7 @@ const MONGO_DB = process.env.MONGO_DB;
 
 const uri = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster.5pkto.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
 
-const { BOT_DOMAIN, BOT_TOKEN: token } = process.env;
+const { BOT_DOMAIN, BOT_TOKEN: token, PORT } = process.env;
 if (token === undefined) {
   throw new Error('BOT_TOKEN must be provided!');
 }
@@ -74,7 +74,7 @@ mongoose.connect(uri).then(() => {
     webhook: {
       hookPath: "/" + bot.secretPathComponent(),
       domain: String(BOT_DOMAIN),
-      port: 3030
+      port: Number(PORT)
     },
   }).then(() => console.log("Bot start"));
 });
