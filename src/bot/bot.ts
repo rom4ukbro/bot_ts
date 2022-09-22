@@ -24,6 +24,7 @@ if (token === undefined) {
 
 const bot = new Telegraf<CustomContext>(token);
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const stage = new Scenes.Stage<CustomContext>([
   ...scenes,

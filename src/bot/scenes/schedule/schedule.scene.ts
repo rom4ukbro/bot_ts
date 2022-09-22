@@ -119,7 +119,7 @@ writeDateScene.command("start", async (ctx) => {
 
 writeDateScene.on("text", (ctx) => {
   try {
-    if (!moment(ctx.message.text).isValid()) {
+    if (!moment(ctx.message.text, "DD.MM.YYYY").isValid()) {
       ctx.deleteMessage(ctx.message.message_id).catch(() => {});
       return ctx.telegram
         .editMessageText(
