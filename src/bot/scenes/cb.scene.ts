@@ -24,7 +24,7 @@ cbScene.on("text", (ctx) => {
   try {
     ctx.deleteMessage(ctx.message.message_id).catch(() => {});
     ctx.deleteMessage(ctx.session.cbId).catch(() => {});
-    ctx.scene.enter("chooseScene");
+    ctx.scene.leave();
     ctx.telegram.sendMessage(
       "-1001378618059",
       `Від [${ctx.from.username || ctx.from.first_name}](tg://user?id=${

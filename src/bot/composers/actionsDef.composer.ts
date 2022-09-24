@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Composer } from "telegraf";
 import { Users } from "../../db/user.schema";
 import { CustomContext } from "../custom-context";
@@ -40,7 +41,7 @@ composer.action("reset_no", (ctx) => {
   } catch (error) {}
 });
 
-composer.action("cbScene", (ctx) => {
+composer.action("cbWrite", (ctx) => {
   try {
     ctx.answerCbQuery().catch(() => {});
     ctx.scene.enter("cbScene");

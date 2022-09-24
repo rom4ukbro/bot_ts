@@ -32,7 +32,7 @@ const adminsFncBtn = [
 
 const mailingKeyboard = Markup.inlineKeyboard([
   [{ text: "Звичайна", callback_data: "simple" }],
-  [{ text: "Зворотній відгук", callback_data: "cb" }],
+  [{ text: "Зворотній відгук", callback_data: "cbMailing" }],
   [{ text: "Сповістити про оновлення", callback_data: "update" }],
   [{ text: "Назад", callback_data: "back" }],
 ]);
@@ -137,7 +137,7 @@ adminPanelScene.action("simple", (ctx) => {
   }
 });
 
-adminPanelScene.action("cb", (ctx) => {
+adminPanelScene.action("cbMailing", (ctx) => {
   try {
     ctx.scene.enter("mailingCbScene");
     ctx.answerCbQuery().catch(() => {});
@@ -185,6 +185,7 @@ mailingSimpleScene.action("send", async (ctx) => {
       "Можеш продовжувати користуватися ботом. Я дам знати, коли розсилка завершиться",
       { show_alert: true }
     );
+    await ctx.scene.enter("adminPanelScene");
 
     for (const userId of ctx.session.users) {
       try {
@@ -279,6 +280,7 @@ mailingCbScene.action("send", async (ctx) => {
       "Можеш продовжувати користуватися ботом. Я дам знати, коли розсилка завершиться",
       { show_alert: true }
     );
+    await ctx.scene.enter("adminPanelScene");
 
     for (const userId of ctx.session.users) {
       try {
@@ -286,7 +288,10 @@ mailingCbScene.action("send", async (ctx) => {
           parse_mode: "Markdown",
           disable_web_page_preview: true,
           reply_markup: {
-            inline_keyboard: [[{ text: "Прочитано", callback_data: "del" }]],
+            inline_keyboard: [
+              [{ text: "Зворотній зв'язок", callback_data: "cbWrite" }],
+              [{ text: "Прочитано", callback_data: "del" }],
+            ],
           },
         });
       } catch (e) {
@@ -332,7 +337,7 @@ mailingCbScene.on("text", (ctx) => {
   }
 });
 
-mailingCbScene.action("cb", (ctx) => {
+mailingCbScene.action("cbWrite", (ctx) => {
   try {
     ctx
       .answerCbQuery("Це приклад кнопки вона працюватиме після відправки", {
@@ -384,6 +389,7 @@ mailingUpdateScene.action("send", async (ctx) => {
     "Можеш продовжувати користуватися ботом. Я дам знати, коли розсилка завершиться",
     { show_alert: true }
   );
+  await ctx.scene.enter("adminPanelScene");
 
   try {
     for (const userId of ctx.session.users) {

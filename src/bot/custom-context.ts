@@ -20,6 +20,7 @@ export interface SessionData extends SceneSession {
   default_role?: string;
   default_mode?: boolean;
   weekShift: number;
+  weekMode: boolean;
   searchArr: string[];
   resultArr: string[];
   space?: string;

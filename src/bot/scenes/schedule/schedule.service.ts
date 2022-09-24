@@ -94,47 +94,53 @@ class ScheduleService {
         );
       }
 
-      ctx.session.scheduleKeyboard = JSON.parse(
-        JSON.stringify(scheduleKeyboard)
-      );
+      if (!ctx.session.weekMode) {
+        ctx.session.scheduleKeyboard = JSON.parse(
+          JSON.stringify(scheduleKeyboard)
+        );
 
-      ctx.session.weekDaysBtn = [...weekDaysBtn];
-      ctx.session.weekDaysBtn[
-        ctx.session.weekDaysBtn.findIndex(
-          (el: any) => el.text == ctx.session.day
-        )
-      ] = {
-        text: checkBtn,
-        callback_data: checkBtn,
-      };
-      ctx.session.scheduleKeyboard[0] = ctx.session.weekDaysBtn;
-      // @ts-ignore
-      ctx.session.fulDay = fullDays[ctx.session.day];
-      ctx.session.scheduleKeyboard[2][1] = {
-        text: allWeekBtnText,
-        callback_data: allWeekBtnText,
-      };
-      ctx.telegram
-        .editMessageText(
-          ctx.from?.id,
-          ctx.session.oneMessageId,
-          "",
-          toMessage(
-            await redisGetData(ctx.session.value + "_" + ctx.session.weekShift),
-            ctx.session.fulDay,
-            ctx.session.value,
-            String(ctx.session.space)
-          ),
-          {
-            parse_mode: "Markdown",
-            disable_web_page_preview: true,
-            reply_markup: { inline_keyboard: ctx.session.scheduleKeyboard },
-          }
-        )
-        .catch((err) => {
-          console.log(err);
-        });
-      delete ctx.session.space;
+        ctx.session.weekDaysBtn = [...weekDaysBtn];
+        ctx.session.weekDaysBtn[
+          ctx.session.weekDaysBtn.findIndex(
+            (el: any) => el.text == ctx.session.day
+          )
+        ] = {
+          text: checkBtn,
+          callback_data: checkBtn,
+        };
+        ctx.session.scheduleKeyboard[0] = ctx.session.weekDaysBtn;
+        // @ts-ignore
+        ctx.session.fulDay = fullDays[ctx.session.day];
+        ctx.session.scheduleKeyboard[2][1] = {
+          text: allWeekBtnText,
+          callback_data: allWeekBtnText,
+        };
+        ctx.telegram
+          .editMessageText(
+            ctx.from?.id,
+            ctx.session.oneMessageId,
+            "",
+            toMessage(
+              await redisGetData(
+                ctx.session.value + "_" + ctx.session.weekShift
+              ),
+              ctx.session.fulDay,
+              ctx.session.value,
+              String(ctx.session.space)
+            ),
+            {
+              parse_mode: "Markdown",
+              disable_web_page_preview: true,
+              reply_markup: { inline_keyboard: ctx.session.scheduleKeyboard },
+            }
+          )
+          .catch((err) => {
+            console.log(err);
+          });
+        delete ctx.session.space;
+      } else {
+        new ScheduleService().allWeek(ctx);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -152,6 +158,7 @@ class ScheduleService {
   }
 
   async day(ctx: CustomContext) {
+    ctx.session.weekMode = false;
     new ScheduleService().daySchedule(String(ctx.callbackQuery?.data), ctx);
   }
 
@@ -258,6 +265,7 @@ class ScheduleService {
 
   async allWeek(ctx: CustomContext) {
     try {
+      ctx.session.weekMode = true;
       ctx.session.scheduleKeyboard = JSON.parse(
         JSON.stringify(scheduleKeyboard)
       );
@@ -267,7 +275,10 @@ class ScheduleService {
         text: allWeekBtnText + emoji.get(":pushpin:"),
         callback_data: allWeekBtnText + emoji.get(":pushpin:"),
       };
-      await ctx.editMessageText(
+      await ctx.telegram.editMessageText(
+        ctx.from?.id,
+        ctx.session.oneMessageId,
+        "",
         toWeekMessage(
           await redisGetData(ctx.session.value + "_" + ctx.session.weekShift),
           ctx.session.fulDay,
