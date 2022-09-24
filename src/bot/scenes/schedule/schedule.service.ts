@@ -186,6 +186,7 @@ class ScheduleService {
 
   async today(ctx: CustomContext) {
     try {
+      ctx.session.weekMode = false;
       ctx.session.day =
         moment().format("dd").charAt(0).toUpperCase() +
         moment().format("dd").charAt(1);
