@@ -332,7 +332,7 @@ statement3Scene.action(done, (ctx) => {
   try {
     const infoArr = ctx.session.statementData;
 
-    const info = `Група: ${infoArr.group}\nПІБ: ${infoArr.pib}\nНомер: ${infoArr.phone}\nПричина: відсутній(ня) у зв\'язку з ${infoArr.reason}\nДодаю: ${infoArr.add}\nДокумент: [покликання](${infoArr.uri})\n\nВсе вірно?`;
+    const info = `Група: ${infoArr.group}\nПІБ: ${infoArr.pib}\nНомер: ${infoArr.phone}\nПричина: відсутній(ня) у зв\'язку з ${infoArr.reason}\nДодаю: ${infoArr.add}\nДокумент: [посилання](${infoArr.uri})\n\nВсе вірно?`;
     if (/undefined/.test(info) && ctx.session.statementData.uri) {
       return ctx
         .answerCbQuery(fieldNotFill, { show_alert: true })

@@ -39,6 +39,7 @@ class CheckerService {
         JSON.stringify(value) !== JSON.stringify(scheduleOld[prop]);
       if (hasChange) {
         await redisWriteData(value + "_" + 0 + "_checker", scheduleNew, 7200);
+        await redisWriteData(value + "_" + 0, scheduleNew, 3600);
         changes.push(value);
       }
     }
