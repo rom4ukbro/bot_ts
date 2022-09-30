@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { deleteMessage } from "../../helpers";
 import { welcomeText } from "../../text";
-import { Users } from "../../../db/user.schema";
+import { UsersModel } from "../../../db/user.schema";
 import { CustomContext } from "../../custom-context";
 import { choiceKeyboard } from "./welcome.keyboard";
 
@@ -43,7 +43,7 @@ class WelcomeService {
       if (!!ctx.session.value && !!ctx.session.mode) {
         ctx.scene.enter("scheduleScene");
       } else if (!ctx.session.default_value || !ctx.session.default_role) {
-        await Users.findOne({ _id: ctx.from?.id })
+        await UsersModel.findOne({ _id: ctx.from?.id })
           .then(async (user) => {
             if (!user?.default_value || !user?.default_role) {
               return ctx.scene.enter("defaultValueScene");

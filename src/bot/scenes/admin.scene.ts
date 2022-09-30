@@ -16,7 +16,7 @@ import {
 } from "../text";
 import { CustomContext } from "../custom-context";
 
-import { Users } from "../../db/user.schema";
+import { UsersModel } from "../../db/user.schema";
 
 const admins = String(process.env.ADMINS_ID).split(",");
 const botStart = moment.tz("Europe/Zaporozhye").format("LLLL");
@@ -70,12 +70,35 @@ adminPanelScene.enter(async (ctx) => {
       ctx.reply(adminWelcome, Markup.inlineKeyboard(adminsFncBtn));
     }
 
-    const ids = (await Users.find().select("_id")).map((item) => item._id);
+    const ids = await UsersModel.find().select("_id");
 
-    ctx.session.users = ids;
-    ctx.session.usersCount = await Users.countDocuments();
-    ctx.session.activeUsersCount = await Users.countDocuments({
+    ctx.session.users = ids.map((item) => item._id);
+    ctx.session.info = {};
+    ctx.session.info.usersCount = await UsersModel.countDocuments();
+    ctx.session.info.teacherCount = await UsersModel.countDocuments({
+      default_role: "teacher",
+    });
+    ctx.session.info.studentCount = await UsersModel.countDocuments({
+      default_role: "group",
+    });
+    ctx.session.info.unknownCount = await UsersModel.countDocuments({
+      default_role: null,
+    });
+    ctx.session.info.weekCount = await UsersModel.countDocuments({
       last_activity: { $gte: moment().add(-1, "weeks").format() },
+    });
+    ctx.session.info.activeCount = await UsersModel.countDocuments({
+      $or: [
+        { blocked: false },
+        { blocked: { $exists: false } },
+        { blocked: null },
+      ],
+    });
+    ctx.session.info.blockCount = await UsersModel.countDocuments({
+      blocked: true,
+    });
+    ctx.session.info.notificationCount = await UsersModel.countDocuments({
+      changeNotification: true,
     });
   } catch (e) {
     console.log(e);
@@ -109,8 +132,14 @@ adminPanelScene.action("info", (ctx) => {
         `Дата запуску: ${moment
           .tz(botStart, "LLLL", "Europe/Zaporozhye")
           .format("LLL")}\n` +
-        `Всього користувачів: ${ctx.session.usersCount}\n` +
-        `Користувачів за останні 7 днів: ${ctx.session.activeUsersCount}\n`,
+        `Всього користувачів: ${ctx.session.info.usersCount}\n` +
+        `Викладачів: ${ctx.session.info.teacherCount}\n` +
+        `Студентів: ${ctx.session.info.studentCount}\n` +
+        `Невизначених: ${ctx.session.info.unknownCount}\n` +
+        `Користувачів за останні 7 днів: ${ctx.session.info.weekCount}\n\n` +
+        `Користувачів активувало сповіщення: ${ctx.session.info.notificationCount}\n\n` +
+        `Активних: ${ctx.session.info.activeCount}\n` +
+        `Заблокувало: ${ctx.session.info.blockCount}\n`,
       Markup.inlineKeyboard([[{ text: "Назад", callback_data: "back" }]])
     );
     ctx.answerCbQuery().catch(() => {});
@@ -187,6 +216,7 @@ mailingSimpleScene.action("send", async (ctx) => {
     );
     await ctx.scene.enter("adminPanelScene");
 
+    const blockIds = [];
     for (const userId of ctx.session.users) {
       try {
         await ctx.telegram.sendMessage(userId, ctx.session.text, {
@@ -198,8 +228,11 @@ mailingSimpleScene.action("send", async (ctx) => {
         });
       } catch (error) {
         sendMessages -= 1;
+        blockIds.push(userId);
       }
     }
+
+    await UsersModel.updateMany({ _id: { $in: blockIds } }, { blocked: true });
 
     await ctx.reply(`Повідомлення отримали ${sendMessages} користувачів`, {
       parse_mode: "Markdown",
@@ -282,6 +315,7 @@ mailingCbScene.action("send", async (ctx) => {
     );
     await ctx.scene.enter("adminPanelScene");
 
+    const blockIds = [];
     for (const userId of ctx.session.users) {
       try {
         await ctx.telegram.sendMessage(userId, ctx.session.text, {
@@ -296,8 +330,11 @@ mailingCbScene.action("send", async (ctx) => {
         });
       } catch (e) {
         sendMessages -= 1;
+        blockIds.push(userId);
       }
     }
+
+    await UsersModel.updateMany({ _id: { $in: blockIds } }, { blocked: true });
 
     await ctx.reply(`Повідомлення отримали ${sendMessages} користувачів`, {
       parse_mode: "Markdown",
@@ -385,13 +422,14 @@ mailingUpdateScene.enter((ctx) => {
 mailingUpdateScene.action("send", async (ctx) => {
   sendMessages = ctx.session.users.length;
 
-  await ctx.answerCbQuery(
-    "Можеш продовжувати користуватися ботом. Я дам знати, коли розсилка завершиться",
-    { show_alert: true }
-  );
-  await ctx.scene.enter("adminPanelScene");
-
   try {
+    await ctx.answerCbQuery(
+      "Можеш продовжувати користуватися ботом. Я дам знати, коли розсилка завершиться",
+      { show_alert: true }
+    );
+    await ctx.scene.enter("adminPanelScene");
+
+    const blockIds = [];
     for (const userId of ctx.session.users) {
       try {
         await ctx.telegram.sendMessage(
@@ -407,8 +445,11 @@ mailingUpdateScene.action("send", async (ctx) => {
         );
       } catch (error) {
         sendMessages -= 1;
+        blockIds.push(userId);
       }
     }
+
+    await UsersModel.updateMany({ _id: { $in: blockIds } }, { blocked: true });
 
     ctx.reply(`Повідомлення отримали ${sendMessages} користувачів`, {
       parse_mode: "Markdown",

@@ -2,21 +2,22 @@
 import moment from "moment";
 import "moment-timezone";
 import { CustomContext } from "./custom-context";
-import { Users } from "../db/user.schema";
+import { UsersModel } from "../db/user.schema";
 
 function deleteMessage(
   ctx: CustomContext,
   messageId: number,
-  oneMessageId?: number
+  oneMessageId?: number,
+  limit = 100
 ) {
-  for (let i = messageId - 100; i <= messageId; i++) {
+  for (let i = messageId - limit; i <= messageId; i++) {
     if (i == oneMessageId) continue;
     ctx.deleteMessage(i).catch(() => {});
   }
 }
 
 async function activity(ctx: CustomContext) {
-  await Users.updateOne(
+  await UsersModel.updateOne(
     { _id: ctx.from?.id },
     { last_activity: moment.tz("Europe/Zaporozhye").format() }
   ).maxTimeMS(500);

@@ -25,8 +25,16 @@ export interface SessionData extends SceneSession {
     delMess: number;
     text: string;
     users: number[];
-    usersCount: number;
-    activeUsersCount: number;
+    info: {
+        usersCount?: number;
+        weekCount?: number;
+        teacherCount?: number;
+        studentCount?: number;
+        unknownCount?: number;
+        activeCount?: number;
+        blockCount?: number;
+        notificationCount?: number;
+    };
 }
 export interface CustomContext extends BaseBotContext {
     session: SessionData;

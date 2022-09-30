@@ -1,5 +1,5 @@
 import { Composer } from "telegraf";
-import { Users } from "../../db/user.schema";
+import { UsersModel } from "../../db/user.schema";
 import {
   nextWeekText,
   todayText,
@@ -85,7 +85,7 @@ composer.action("📌", (ctx) => {
 function oneReaction(ctx: CustomContext) {
   try {
     ctx.session.time = 0;
-    Users.findById(ctx.from?.id)
+    UsersModel.findById(ctx.from?.id)
       .then((result) => {
         ctx.answerCbQuery().catch(() => {});
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Composer, Markup } from "telegraf";
-import { Users } from "../../db/user.schema";
+import { UsersModel } from "../../db/user.schema";
 import { resetDefaultValueText } from "../text";
 import { deleteMessage } from "../helpers";
 import { CustomContext } from "../custom-context";
@@ -16,7 +16,7 @@ composer.command("start", async (ctx) => {
       return ctx.reply(`Я не працюю в ${ctx.message.chat?.type}`);
     }
 
-    await Users.findOneAndUpdate(
+    await UsersModel.findOneAndUpdate(
       { _id: ctx.from.id },
       {
         _id: ctx.from.id,
@@ -102,6 +102,40 @@ composer.command("reset", (ctx) => {
         ])
       );
     }
+
+    deleteMessage(ctx, ctx.message.message_id, ctx.session.oneMessageId);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+composer.command("change_notification", async (ctx) => {
+  try {
+    if (
+      ctx.message.chat?.type == "supergroup" ||
+      ctx.message.chat?.type == "group"
+    ) {
+      return ctx.reply(`Я не працюю в ${ctx.message.chat?.type}`);
+    }
+
+    await ctx.deleteMessage().catch(() => {});
+    await ctx.reply(
+      "Ти хочеш отримувати сповіщення при зміні розкладу?\n\nЦя функція поки що в тестовому режимі і може працювати погано\nЯкщо ти стикнешся з якимись проблемами, то повідом власника(посилання є в описі бота)",
+      Markup.inlineKeyboard([
+        [
+          Markup.button.callback(
+            "Отримувати сповіщення",
+            "changeNotificationEnable"
+          ),
+        ],
+        [
+          Markup.button.callback(
+            "Не отримувати сповіщення",
+            "changeNotificationDisenable"
+          ),
+        ],
+      ])
+    );
 
     deleteMessage(ctx, ctx.message.message_id, ctx.session.oneMessageId);
   } catch (e) {

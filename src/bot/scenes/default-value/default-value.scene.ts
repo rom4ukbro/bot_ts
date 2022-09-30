@@ -15,7 +15,7 @@ import {
   choiceTeacherText,
   defaultValueText,
 } from "../../text";
-import { Users } from "../../../db/user.schema";
+import { UsersModel } from "../../../db/user.schema";
 import { deleteMessage } from "../../helpers";
 import { CustomContext } from "../../custom-context";
 import { choiceKeyboard } from "./default-value.keyboard";
@@ -148,7 +148,7 @@ function searchFnc(mode: string, ctx: CustomContext) {
     if (ctx.session.resultArr.length === 1) {
       ctx.session.value = ctx.session.resultArr[0];
 
-      Users.findOneAndUpdate(
+      UsersModel.findOneAndUpdate(
         { _id: ctx.from?.id },
         {
           default_value: ctx.session.resultArr[0],

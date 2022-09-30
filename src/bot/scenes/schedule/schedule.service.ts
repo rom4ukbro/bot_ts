@@ -37,22 +37,20 @@ class ScheduleService {
       if (!!ctx.session.default_mode) {
         ctx.session.value = String(ctx.session.default_value);
         ctx.session.mode = String(ctx.session.default_role);
-        ctx.session.space = " ";
       }
 
       delete ctx.session.default_mode;
 
       if (!ctx.session.day) {
         if (moment().format("LT") > "18:00") {
-          ctx.session.day =
-            moment().add(1, "day").format("dd").charAt(0).toUpperCase() +
-            moment().add(1, "day").format("dd").charAt(1);
+          const day = moment().add(1, "day").format("dd");
+          ctx.session.day = day.charAt(0).toUpperCase() + day.charAt(1);
 
           if (ctx.session.day == "Пн") ctx.session.weekShift += 1;
-        } else
-          ctx.session.day =
-            moment().format("dd").charAt(0).toUpperCase() +
-            moment().format("dd").charAt(1);
+        } else {
+          const day = moment().format("dd");
+          ctx.session.day = day.charAt(0).toUpperCase() + day.charAt(1);
+        }
       }
 
       if (
@@ -65,7 +63,9 @@ class ScheduleService {
             "",
             loadSchedule
           )
-          .catch(() => {});
+          .catch((e) => {
+            console.log(e);
+          });
 
         await redisWriteData(
           ctx.session.value + "_" + ctx.session.weekShift,
@@ -125,8 +125,7 @@ class ScheduleService {
                 ctx.session.value + "_" + ctx.session.weekShift
               ),
               ctx.session.fulDay,
-              ctx.session.value,
-              String(ctx.session.space)
+              ctx.session.value
             ),
             {
               parse_mode: "Markdown",
@@ -137,7 +136,6 @@ class ScheduleService {
           .catch((err) => {
             console.log(err);
           });
-        delete ctx.session.space;
       } else {
         new ScheduleService().allWeek(ctx);
       }
@@ -282,7 +280,6 @@ class ScheduleService {
         "",
         toWeekMessage(
           await redisGetData(ctx.session.value + "_" + ctx.session.weekShift),
-          ctx.session.fulDay,
           ctx.session.value
         ),
         {
@@ -347,8 +344,7 @@ class ScheduleService {
         toMessage(
           await redisGetData(ctx.session.value + "_" + ctx.session.weekShift),
           ctx.session.fulDay,
-          ctx.session.value,
-          ""
+          ctx.session.value
         ),
         {
           parse_mode: "Markdown",

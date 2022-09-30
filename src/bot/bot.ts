@@ -5,7 +5,7 @@ import "moment-timezone";
 moment.locale("uk");
 import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
-import { Users } from "../db/user.schema";
+import { UsersModel } from "../db/user.schema";
 import scenes from "./scenes";
 import mongoose from "mongoose";
 import { command, actionsDef, actionsAdd } from "./composers";
@@ -41,10 +41,19 @@ const stage = new Scenes.Stage<CustomContext>([
   // statement10Scene,
 ]);
 
+bot.telegram.setMyCommands([
+  { command: "start", description: "Почати спілкування з ботом" },
+  { command: "reset", description: "Скинути значення за замовчуванням" },
+  {
+    command: "change_notification",
+    description: "Керувати сповіщеннями про зміни в розкладі",
+  },
+]);
+
 bot.use(session());
 bot.use(stage.middleware());
 bot.use(async (ctx, next) => {
-  await Users.updateOne(
+  await UsersModel.updateOne(
     { _id: ctx.from?.id },
     { last_activity: moment.tz("Europe/Zaporozhye").format() }
   ).maxTimeMS(500);
@@ -81,10 +90,12 @@ mongoose.connect(uri).then(() => {
         port: Number(PORT),
       },
     })
-    .then(() => console.log("Bot start"));
+    .then(() => {
+      console.log("Bot start");
+    });
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
-module.exports = { bot };
+export { bot };

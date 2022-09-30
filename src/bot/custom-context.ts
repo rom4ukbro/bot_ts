@@ -23,7 +23,6 @@ export interface SessionData extends SceneSession {
   weekMode: boolean;
   searchArr: string[];
   resultArr: string[];
-  space?: string;
   day: string;
   scheduleKeyboard: any;
   weekDaysBtn: any;
@@ -37,8 +36,16 @@ export interface SessionData extends SceneSession {
 
   // admin
   users: number[];
-  usersCount: number;
-  activeUsersCount: number;
+  info: {
+    usersCount?: number;
+    weekCount?: number;
+    teacherCount?: number;
+    studentCount?: number;
+    unknownCount?: number;
+    activeCount?: number;
+    blockCount?: number;
+    notificationCount?: number;
+  };
 }
 
 export interface CustomContext extends BaseBotContext {
