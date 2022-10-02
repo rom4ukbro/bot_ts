@@ -52,6 +52,8 @@ const job = new CronJob(
   true
 );
 
+job.start();
+
 process.once("SIGINT", () => job.stop());
 process.once("SIGTERM", () => job.stop());
 

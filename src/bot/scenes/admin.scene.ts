@@ -91,11 +91,7 @@ adminPanelScene.enter(async (ctx) => {
       blocked: false,
     });
     ctx.session.info.activeCount = await UsersModel.countDocuments({
-      $or: [
-        { blocked: false },
-        { blocked: { $exists: false } },
-        { blocked: null },
-      ],
+      blocked: false,
     });
     ctx.session.info.blockCount = await UsersModel.countDocuments({
       blocked: true,
