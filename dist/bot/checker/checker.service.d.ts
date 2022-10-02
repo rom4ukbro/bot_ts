@@ -1,5 +1,5 @@
 declare class CheckerService {
-    hasScheduleChange(value: string, mode?: "group" | "teacher"): Promise<false | {
+    hasScheduleChanges(value: string, mode?: "group" | "teacher"): Promise<false | {
         date: string;
         day: string;
         items: {

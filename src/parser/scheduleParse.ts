@@ -165,7 +165,7 @@ async function parse(obj: any) {
 
   const end: any = new Date(); // конец измерения
 
-  console.log("Цикл занял " + (end - start) / 1000 + " s");
+  console.log("Цикл зайняв: " + (end - start) / 1000 + " s");
 
   return result;
 }

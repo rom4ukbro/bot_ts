@@ -91,7 +91,7 @@ mongoose.connect(uri).then(() => {
       },
     })
     .then(() => {
-      console.log("Bot start");
+      console.log("Bot started");
     });
 });
 

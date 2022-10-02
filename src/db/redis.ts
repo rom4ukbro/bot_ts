@@ -1,4 +1,6 @@
-import * as redis from 'async-redis';
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import * as redis from "async-redis";
 
 const REDIS_URL = process.env.REDIS_URL || 6379;
 
@@ -24,7 +26,7 @@ async function redisGetData(key: string) {
 }
 
 async function redisDelData(key: string) {
-  await client.del(key, () => { });
+  await client.del(key, () => {});
 }
 
 export { redisWriteData, redisGetData, redisDelData };

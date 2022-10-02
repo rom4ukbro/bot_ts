@@ -1,18 +1,19 @@
-const fs = require('fs');
-const readline = require('readline-sync');
-const Docs = require('@googleapis/docs');
-const Drive = require('@googleapis/drive');
-const Sheets = require('@googleapis/sheets');
+/* eslint-disable @typescript-eslint/no-var-requires */
+const fs = require("fs");
+const readline = require("readline-sync");
+const Docs = require("@googleapis/docs");
+const Drive = require("@googleapis/drive");
+const Sheets = require("@googleapis/sheets");
 
-const { getRequests } = require('./requests');
+const { getRequests } = require("./requests");
 
 const SCOPES = [
-  'https://www.googleapis.com/auth/drive',
-  'https://www.googleapis.com/auth/documents',
-  'https://www.googleapis.com/auth/spreadsheets.readonly',
+  "https://www.googleapis.com/auth/drive",
+  "https://www.googleapis.com/auth/documents",
+  "https://www.googleapis.com/auth/spreadsheets.readonly",
 ];
 
-const TOKEN_PATH = __dirname + '/token.json';
+const TOKEN_PATH = __dirname + "/token.json";
 
 const STATEMENT_FOLDER_ID = process.env.STATEMENT_FOLDER_ID;
 
@@ -32,10 +33,10 @@ const STATEMENT_FOLDER_ID = process.env.STATEMENT_FOLDER_ID;
  */
 async function googleApis(mode, payload) {
   switch (mode) {
-    case 'checkPhone':
+    case "checkPhone":
       callback = checkPhone;
       break;
-    case 'generateDocs':
+    case "generateDocs":
       callback = generateDocs;
   }
 
@@ -43,9 +44,14 @@ async function googleApis(mode, payload) {
 }
 
 async function authorize(callback, payload) {
-  const credentials = fs.readFileSync(__dirname + '/credentials.json');
-  const { client_secret, client_id, redirect_uris } = JSON.parse(credentials).installed;
-  const oAuth2Client = new Docs.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+  const credentials = fs.readFileSync(__dirname + "/credentials.json");
+  const { client_secret, client_id, redirect_uris } =
+    JSON.parse(credentials).installed;
+  const oAuth2Client = new Docs.auth.OAuth2(
+    client_id,
+    client_secret,
+    redirect_uris[0]
+  );
 
   try {
     var tokens = JSON.parse(fs.readFileSync(TOKEN_PATH));
@@ -55,7 +61,7 @@ async function authorize(callback, payload) {
   try {
     oAuth2Client.setCredentials(tokens);
   } catch (e) {
-    return { status: 'failed' };
+    return { status: "failed" };
   }
 
   return await callback(oAuth2Client, payload);
@@ -63,13 +69,13 @@ async function authorize(callback, payload) {
 
 async function getAccessToken(oAuth2Client, callback, payload) {
   const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
+    access_type: "offline",
     scope: SCOPES,
   });
 
-  console.log('Authorize this app by visiting this url:', authUrl);
+  console.log("Authorize this app by visiting this url:", authUrl);
 
-  const code = readline.question('Enter the code from that page here: ');
+  const code = readline.question("Enter the code from that page here: ");
 
   const tokens = await oAuth2Client.getToken(code);
 
@@ -77,15 +83,15 @@ async function getAccessToken(oAuth2Client, callback, payload) {
 
   fs.writeFile(TOKEN_PATH, JSON.stringify(tokens.tokens), (err) => {
     if (err) return console.error(err);
-    console.log('Token stored to', TOKEN_PATH);
+    console.log("Token stored to", TOKEN_PATH);
   });
 
   return await callback(oAuth2Client, payload);
 }
 
 async function generateDocs(auth, payload) {
-  const docs = Docs.docs({ version: 'v1', auth });
-  const drive = Drive.drive({ version: 'v3', auth });
+  const docs = Docs.docs({ version: "v1", auth });
+  const drive = Drive.drive({ version: "v3", auth });
 
   const sourceId = await getFilesId(auth, payload.docName);
 
@@ -102,11 +108,11 @@ async function generateDocs(auth, payload) {
         requestBody: metadata,
       },
       {
-        fields: 'id',
-      },
+        fields: "id",
+      }
     );
   } catch (e) {
-    return { status: 'failed' };
+    return { status: "failed" };
   }
 
   const requests = getRequests(payload);
@@ -121,24 +127,24 @@ async function generateDocs(auth, payload) {
     });
   } catch (e) {
     console.log(e);
-    return { status: 'failed' };
+    return { status: "failed" };
   }
 
   return {
-    status: 'OK',
+    status: "OK",
     url: `https://docs.google.com/document/d/${result?.data?.documentId}/edit`,
   };
 }
 
 async function checkPhone(auth, payload) {
-  const sheets = Sheets.sheets({ version: 'v4', auth });
+  const sheets = Sheets.sheets({ version: "v4", auth });
   const { phone } = payload;
 
-  id = await getFilesId(auth, 'Список студентів');
+  id = await getFilesId(auth, "Список студентів");
 
   res = await sheets.spreadsheets.values.get({
     spreadsheetId: id,
-    range: 'Всі студенти!AA2:AA',
+    range: "Всі студенти!AA2:AA",
   });
 
   const rows = res?.data?.values;
@@ -170,18 +176,18 @@ async function checkPhone(auth, payload) {
 
 function getFilesId(auth, fileName) {
   return new Promise((resolve, reject) => {
-    const drive = Drive.drive({ version: 'v3', auth });
+    const drive = Drive.drive({ version: "v3", auth });
 
     drive.files.list(
       {
         q: `name = "${fileName}"`,
         pageSize: 100,
-        fields: 'nextPageToken, files(id, name)',
+        fields: "nextPageToken, files(id, name)",
       },
       (err, res) => {
         if (err) {
-          console.log('The drive API returned an error: ' + err);
-          return reject({ status: 'failed' });
+          console.log("The drive API returned an error: " + err);
+          return reject({ status: "failed" });
         }
         const files = res.data.files;
         if (files?.length) {
@@ -189,10 +195,10 @@ function getFilesId(auth, fileName) {
             return resolve(file.id);
           });
         } else {
-          console.log('No files found.');
-          return reject({ status: 'failed' });
+          console.log("No files found.");
+          return reject({ status: "failed" });
         }
-      },
+      }
     );
   });
 }

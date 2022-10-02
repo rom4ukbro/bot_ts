@@ -91,10 +91,8 @@ composer.action("changeNotificationDisenable", (ctx) => {
 composer.action(/watchChanges_.+/, async (ctx) => {
   try {
     ctx.answerCbQuery().catch(() => {});
-    const day = moment(
-      ctx.callbackQuery.data?.split("_")[1],
-      "DD.MM.YYYY"
-    ).format("dd");
+    const data = ctx.callbackQuery.data?.split("_")[1].split("//")[0] || "";
+    const day = moment(data, "DD.MM.YYYY").format("dd");
 
     ctx.session.day = day.charAt(0).toUpperCase() + day.charAt(1);
     ctx.session.weekShift = 0;

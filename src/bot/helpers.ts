@@ -19,7 +19,7 @@ function deleteMessage(
 async function activity(ctx: CustomContext) {
   await UsersModel.updateOne(
     { _id: ctx.from?.id },
-    { last_activity: moment.tz("Europe/Zaporozhye").format() }
+    { last_activity: moment.tz("Europe/Zaporozhye").format(), blocked: false }
   ).maxTimeMS(500);
 }
 

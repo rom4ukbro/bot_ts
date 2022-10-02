@@ -77,15 +77,18 @@ adminPanelScene.enter(async (ctx) => {
     ctx.session.info.usersCount = await UsersModel.countDocuments();
     ctx.session.info.teacherCount = await UsersModel.countDocuments({
       default_role: "teacher",
+      blocked: false,
     });
     ctx.session.info.studentCount = await UsersModel.countDocuments({
       default_role: "group",
+      blocked: false,
     });
     ctx.session.info.unknownCount = await UsersModel.countDocuments({
       default_role: null,
     });
     ctx.session.info.weekCount = await UsersModel.countDocuments({
       last_activity: { $gte: moment().add(-1, "weeks").format() },
+      blocked: false,
     });
     ctx.session.info.activeCount = await UsersModel.countDocuments({
       $or: [
@@ -131,7 +134,7 @@ adminPanelScene.action("info", (ctx) => {
         .fromNow()}\n` +
         `Дата запуску: ${moment
           .tz(botStart, "LLLL", "Europe/Zaporozhye")
-          .format("LLL")}\n` +
+          .format("LLL")}\n\n` +
         `Всього користувачів: ${ctx.session.info.usersCount}\n` +
         `Викладачів: ${ctx.session.info.teacherCount}\n` +
         `Студентів: ${ctx.session.info.studentCount}\n` +

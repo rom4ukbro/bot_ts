@@ -157,16 +157,10 @@ writeDateScene.on("text", (ctx) => {
         24 /
         7
     );
-    ctx.session.day =
-      moment
-        .tz(ctx.message.text, "DD.MM.YYYY", "Europe/Zaporozhye")
-        .format("dd")
-        .charAt(0)
-        .toUpperCase() +
-      moment
-        .tz(ctx.message.text, "DD.MM.YYYY", "Europe/Zaporozhye")
-        .format("dd")
-        .charAt(1);
+    const day = moment
+      .tz(ctx.message.text, "DD.MM.YYYY", "Europe/Zaporozhye")
+      .format("dd");
+    ctx.session.day = day.charAt(0).toUpperCase() + day.charAt(1);
     ctx.scene.enter("scheduleScene");
   } catch (e) {
     console.log(e);

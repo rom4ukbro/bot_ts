@@ -14,21 +14,28 @@ type scheduleDTO = Record<
   }
 >;
 
+const ttl = 3600 * 12;
+
 class CheckerService {
-  async hasScheduleChange(value: string, mode: "group" | "teacher" = "group") {
+  async hasScheduleChanges(value: string, mode: "group" | "teacher" = "group") {
+    const weekShift = 0;
     const scheduleNew: scheduleDTO = await parse({
       mode,
       value,
-      weekShift: 0,
+      weekShift,
     });
     if (scheduleNew.error) return false;
 
     const scheduleOld: scheduleDTO = await redisGetData(
-      value + "_" + 0 + "_checker"
+      value + "_" + weekShift + "_checker"
     );
 
     if (!scheduleOld) {
-      await redisWriteData(value + "_" + 0 + "_checker", scheduleNew, 7200);
+      await redisWriteData(
+        value + "_" + weekShift + "_checker",
+        scheduleNew,
+        ttl
+      );
       return false;
     }
 
@@ -38,8 +45,12 @@ class CheckerService {
       const hasChange =
         JSON.stringify(value) !== JSON.stringify(scheduleOld[prop]);
       if (hasChange) {
-        await redisWriteData(value + "_" + 0 + "_checker", scheduleNew, 7200);
-        await redisWriteData(value + "_" + 0, scheduleNew, 3600);
+        await redisWriteData(
+          value + "_" + weekShift + "_checker",
+          scheduleNew,
+          ttl
+        );
+        await redisWriteData(value + "_" + weekShift, scheduleNew, 3600);
         changes.push(value);
       }
     }
