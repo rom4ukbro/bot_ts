@@ -7,7 +7,7 @@
         "tsc": "./node_modules/typescript/bin/tsc",
         "build": "tsc -b tsconfig.build.json",
         "postinstall": "npm run build",
-        "start": "npm run build && node --enable-source-maps dist/app",
+        "start": "node --enable-source-maps dist/app",
         "start:prod": "node --enable-source-maps dist/app",
         "dev": "nodemon node ./Bot/bot.js"
     },
