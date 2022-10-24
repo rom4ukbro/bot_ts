@@ -3,11 +3,11 @@ function findTeacher(arr: string[], query: string) {
     return item.toLowerCase();
   });
   query = query.toLowerCase();
-  const count = arr.filter((el) => {
+  const filtered = arr.filter((el) => {
     return el.indexOf(query) != -1;
   });
 
-  return count
+  return filtered
     .map((item) => {
       return capitalize(item);
     })
@@ -20,13 +20,17 @@ function findGroup(arr: string[], query: string): string[] {
     return x.toUpperCase();
   });
   query = query.toUpperCase();
-  let count = [];
-  count = arr.filter((el) => {
+  let filtered = [];
+  filtered = arr.filter((el) => {
     return el.indexOf(query) != -1;
   });
 
+  const index = filtered.findIndex((v) => v === query);
+
+  if (index !== -1) return [query];
+
   if (query.charAt(0) !== "З") {
-    return count
+    return filtered
       .filter((el) => {
         return el.charAt(0) !== "З";
       })
@@ -34,7 +38,7 @@ function findGroup(arr: string[], query: string): string[] {
   }
 
   if (query.charAt(0) == "З") {
-    return count
+    return filtered
       .map((el) => {
         if (el.charAt(0) == "З") return unCapitalize(el);
         else return el;
